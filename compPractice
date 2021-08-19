@@ -1,0 +1,63 @@
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       VEX                                                       */
+/*    Created:      Thu Sep 26 2019                                           */
+/*    Description:  Competition Template                                      */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// Motor1               motor         1
+// Motor10              motor         10
+// ---- END VEXCODE CONFIGURED DEVICES ----
+
+#include "vex.h"
+
+using namespace vex;
+
+competition Competition;
+
+/*void moveMotors (int speed ) { 
+  Motor1.setVelocity(speed, percent);
+  Motor10.setVelocity(speed, percent);
+}*/
+
+void LeftMove (int speed) {
+  Motor1.setVelocity(speed, percent);
+  Motor1.spin(forward);
+}
+
+void RightMove (int speed) {
+  Motor1.setVelocity(speed, percent);
+  Motor1.spin(forward);
+}
+
+void pre_auton(void) {
+  // Initializing Robot Configuration. DO NOT REMOVE!
+  vexcodeInit();
+}
+
+void autonomous(void) {}
+
+void usercontrol(void) {
+  while (1) {
+    LeftMove(Controller1.Axis2.position());
+    RightMove(Controller1.Axis3.position());
+    wait(20, msec);
+  }
+}
+
+int main() {
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
+
+  pre_auton();
+
+  while (true) {
+    wait(100, msec);
+  }
+}
