@@ -12,7 +12,9 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller
 // Motor1               motor         1
-// Motor10              motor         10
+// Motor8               motor         8
+// Motor2               motor         2
+// Motor12              motor         12
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -21,19 +23,28 @@ using namespace vex;
 
 competition Competition;
 
-/*void moveMotors (int speed ) { 
-  Motor1.setVelocity(speed, percent);
-  Motor10.setVelocity(speed, percent);
-}*/
+void LeftMove(int speed) {
+  Motor8.setVelocity(speed, percent);
+  Motor8.spin(forward);
+}
 
-void LeftMove (int speed) {
+void RightMove(int speed) {
   Motor1.setVelocity(speed, percent);
   Motor1.spin(forward);
 }
 
-void RightMove (int speed) {
-  Motor1.setVelocity(speed, percent);
-  Motor1.spin(forward);
+void ForkMove(int speed) {
+  Motor2.setVelocity(speed, percent);
+  Motor2.spin(forward);
+}
+/*while (Controller1.ButtonDown.pressing()) {
+  Motor2.setVelocity(speed, percent);
+  Motor2.spin(reverse);
+}*/
+
+void ArmControl(int speed) {
+  Motor12.setVelocity(speed, percent);
+  Motor12.spin(forward);
 }
 
 void pre_auton(void) {
@@ -45,6 +56,16 @@ void autonomous(void) {}
 
 void usercontrol(void) {
   while (1) {
+    if (!Controller1.ButtonDown.pressing() && Controller1.ButtonUp.pressing()) {
+      ForkMove(50);
+    } else {
+      ForkMove(0);
+    }
+    if (Controller1.ButtonDown.pressing() && !Controller1.ButtonUp.pressing()) {
+      ForkMove(-50);
+    } else {
+      ForkMove(0);
+    }
     LeftMove(Controller1.Axis2.position());
     RightMove(Controller1.Axis3.position());
     wait(20, msec);
