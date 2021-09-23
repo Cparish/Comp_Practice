@@ -10,11 +10,11 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// Motor1               motor         1
-// Motor8               motor         8
-// Motor2               motor         2
-// Motor12              motor         12
+// Controller1          controller                    
+// Motor1               motor         1               
+// Motor8               motor         8               
+// Motor2               motor         2               
+// Motor12              motor         12              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -37,10 +37,6 @@ void ForkMove(int speed) {
   Motor2.setVelocity(speed, percent);
   Motor2.spin(forward);
 }
-/*while (Controller1.ButtonDown.pressing()) {
-  Motor2.setVelocity(speed, percent);
-  Motor2.spin(reverse);
-}*/
 
 void ArmControl(int speed) {
   Motor12.setVelocity(speed, percent);
@@ -58,10 +54,7 @@ void usercontrol(void) {
   while (1) {
     if (!Controller1.ButtonDown.pressing() && Controller1.ButtonUp.pressing()) {
       ForkMove(50);
-    } else {
-      ForkMove(0);
-    }
-    if (Controller1.ButtonDown.pressing() && !Controller1.ButtonUp.pressing()) {
+    } else if (Controller1.ButtonDown.pressing() && !Controller1.ButtonUp.pressing()) {
       ForkMove(-50);
     } else {
       ForkMove(0);
