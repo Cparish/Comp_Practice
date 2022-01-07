@@ -15,7 +15,7 @@
 // Stuart               motor         3               
 // Otto                 motor         5               
 // Kevin                motor         7               
-// Motor9               motor         9               
+// Karen                motor         9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -44,6 +44,11 @@ void LiftControl(int speed) {
   Kevin.spin(forward);
 }
 
+void bottomLift(int speed) {
+  Karen.setVelocity(speed, percent);
+  Karen.spin(forward);
+}
+
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
@@ -59,6 +64,18 @@ void leftControl(int speed, double time){
   Stuart.setVelocity(speed, percent);
   
   Stuart.spin(forward);
+}
+
+void bottomControl(int speed, double time){
+  Karen.setVelocity(speed, percent);
+  
+  Karen.spin(forward);
+  
+  wait(time * 100, msec);
+  
+  Karen.setVelocity(speed, percent);
+  
+  Karen.spin(forward);
 }
 
 void rightControl(int speed, double time){
@@ -86,6 +103,7 @@ void usercontrol(void) {
     } else {
       ForkMove(0);
     }
+  
     RightMove(Controller1.Axis2.position());
     LeftMove(Controller1.Axis3.position());
     wait(20, msec);
