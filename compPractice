@@ -11,10 +11,11 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
-// Motor1               motor         1               
-// Motor8               motor         8               
-// Motor2               motor         2               
-// Motor12              motor         12              
+// Bob                  motor         1               
+// Stuart               motor         3               
+// Otto                 motor         5               
+// Kevin                motor         7               
+// Motor9               motor         9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -24,23 +25,23 @@ using namespace vex;
 competition Competition;
 
 void LeftMove(int speed) {
-  Motor8.setVelocity(speed, percent);
-  Motor8.spin(forward);
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(forward);
 }
 
 void RightMove(int speed) {
-  Motor1.setVelocity(speed, percent);
-  Motor1.spin(forward);
+  Bob.setVelocity(speed, percent);
+  Bob.spin(forward);
 }
 
 void ForkMove(int speed) {
-  Motor2.setVelocity(speed, percent);
-  Motor2.spin(forward);
+  Otto.setVelocity(speed, percent);
+  Otto.spin(forward);
 }
 
-void ArmControl(int speed) {
-  Motor12.setVelocity(speed, percent);
-  Motor12.spin(forward);
+void LiftControl(int speed) {
+  Kevin.setVelocity(speed, percent);
+  Kevin.spin(forward);
 }
 
 void pre_auton(void) {
@@ -48,7 +49,33 @@ void pre_auton(void) {
   vexcodeInit();
 }
 
-void autonomous(void) {}
+void leftControl(int speed, double time){
+  Stuart.setVelocity(speed, percent);
+  
+  Stuart.spin(forward);
+  
+  wait(time * 100, msec);
+  
+  Stuart.setVelocity(speed, percent);
+  
+  Stuart.spin(forward);
+}
+
+void rightControl(int speed, double time){
+  Bob.setVelocity(speed, percent);
+  
+  Bob.spin(forward);
+  
+  wait(time * 100, msec);
+  
+  Bob.setVelocity(speed, percent);
+  
+  Bob.spin(forward);
+}
+
+void autonomous(void) {
+  
+}
 
 void usercontrol(void) {
   while (1) {
@@ -59,8 +86,8 @@ void usercontrol(void) {
     } else {
       ForkMove(0);
     }
-    LeftMove(Controller1.Axis2.position());
-    RightMove(Controller1.Axis3.position());
+    RightMove(Controller1.Axis2.position());
+    LeftMove(Controller1.Axis3.position());
     wait(20, msec);
   }
 }
