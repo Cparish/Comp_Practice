@@ -10,12 +10,12 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// Bob                  motor         1               
-// Stuart               motor         3               
-// Otto                 motor         5               
-// Kevin                motor         7               
-// Karen                motor         9               
+// Controller1          controller
+// Bob                  motor         1
+// Stuart               motor         3
+// Kevin                motor         4
+// Gru                  motor         2
+// Otto                 motor_group   5, 6
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -23,6 +23,19 @@
 using namespace vex;
 
 competition Competition;
+
+int linesPrinted = 0;
+
+void printLine() {
+  linesPrinted += 1;
+  if (linesPrinted >= 12) {
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(3, 5);
+    linesPrinted = 1;
+  }
+}
+
+// movement voids
 
 void LeftMove(int speed) {
   Stuart.setVelocity(speed, percent);
@@ -39,71 +52,180 @@ void ForkMove(int speed) {
   Otto.spin(forward);
 }
 
-void LiftControl(int speed) {
+void topLift(int speed) {
   Kevin.setVelocity(speed, percent);
   Kevin.spin(forward);
 }
 
 void bottomLift(int speed) {
-  Karen.setVelocity(speed, percent);
-  Karen.spin(forward);
+  Gru.setVelocity(speed, percent);
+  Gru.spin(forward);
 }
+
+// process voids
+
+void autoForward(int speed, double time) {
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(forward);
+  Bob.setVelocity(speed, percent);
+  Bob.spin(forward);
+  wait(time * 1000, msec);
+  Stuart.setVelocity(0, percent);
+  Bob.setVelocity(0, percent);
+}
+
+void autoBackward(int speed, double time) {
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(reverse);
+  Bob.setVelocity(speed, percent);
+  Bob.spin(reverse);
+  wait(time * 1000, msec);
+  Stuart.setVelocity(0, percent);
+  Bob.setVelocity(0, percent);
+}
+
+void autoBackIntake(int speed, double time) {
+  Stuart.setVelocity(speed / 4, percent);
+  Stuart.spin(reverse);
+  Bob.setVelocity(speed / 4, percent);
+  Bob.spin(reverse);
+  Gru.setVelocity(speed, percent);
+  Gru.spin(forward);
+  Kevin.setVelocity(speed, percent);
+  Kevin.spin(forward);
+
+  wait(time * 1000, msec);
+
+  Stuart.setVelocity(0, percent);
+  Bob.setVelocity(0, percent);
+  Gru.setVelocity(0, percent);
+  Kevin.setVelocity(0, percent);
+}
+
+void intake(int speed, double time) {
+  Gru.setVelocity(speed, percent);
+  Gru.spin(forward);
+  Kevin.setVelocity(speed, percent);
+  Kevin.spin(forward);
+
+  wait(time * 1000, msec);
+
+  Gru.setVelocity(0, percent);
+  Kevin.setVelocity(0, percent);
+}
+
+void leftControl(int speed, double time) {
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(forward);
+  wait(time * 1000, msec);
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(forward);
+}
+
+void rightControl(int speed, double time) {
+  Bob.setVelocity(speed, percent);
+  Bob.spin(forward);
+  wait(time * 1000, msec);
+  Bob.setVelocity(speed, percent);
+  Bob.spin(forward);
+}
+
+void forkControl(int speed, double time) {
+  Otto.setVelocity(speed, percent);
+  Otto.spin(forward);
+  wait(time * 100, msec);
+  Otto.setVelocity(0, percent);
+}
+
+void topliftControl(int speed, double time) {
+  Kevin.setVelocity(speed, percent);
+  Kevin.spin(forward);
+  wait(time * 1000, msec);
+  Kevin.setVelocity(speed, percent);
+  Kevin.spin(forward);
+}
+
+void bottomliftControl(int speed, double time) {
+  Gru.setVelocity(speed, percent);
+  Gru.spin(forward);
+  wait(time * 1000, msec);
+  Gru.setVelocity(speed, percent);
+  Gru.spin(forward);
+}
+
+void spinning(int speed, double time){
+  Stuart.setVelocity(speed, percent);
+  Stuart.spin(forward);
+  Bob.setVelocity(speed, percent);
+  Bob.spin(reverse);
+  wait(time * 1000, msec);
+  Stuart.setVelocity(0, percent);
+  Bob.setVelocity(0, percent);
+}
+
+// Competition code
 
 void pre_auton(void) {
+  printLine();
+  Brain.Screen.print("pre_auton launched");
+  Brain.Screen.newLine();
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-}
 
-void leftControl(int speed, double time){
-  Stuart.setVelocity(speed, percent);
-  
-  Stuart.spin(forward);
-  
-  wait(time * 100, msec);
-  
-  Stuart.setVelocity(speed, percent);
-  
-  Stuart.spin(forward);
-}
+  // code pre_auton here
 
-void bottomControl(int speed, double time){
-  Karen.setVelocity(speed, percent);
-  
-  Karen.spin(forward);
-  
-  wait(time * 100, msec);
-  
-  Karen.setVelocity(speed, percent);
-  
-  Karen.spin(forward);
-}
-
-void rightControl(int speed, double time){
-  Bob.setVelocity(speed, percent);
-  
-  Bob.spin(forward);
-  
-  wait(time * 100, msec);
-  
-  Bob.setVelocity(speed, percent);
-  
-  Bob.spin(forward);
+  printLine();
+  Brain.Screen.print("pre_auton handled");
+  Brain.Screen.newLine();
 }
 
 void autonomous(void) {
-  
+  printLine();
+  Brain.Screen.print("autonomous launched");
+  Brain.Screen.newLine();
+  /////////autonomous
+
+  forkControl(50, 4.1);
+  autoForward(50, 2.1);
+  forkControl(-50, 10);
+  spinning(40,1.75);
+  autoBackIntake(100,7);
+  intake(100,5);
+
+  /////////autonomous
+  printLine();
+  Brain.Screen.print("autonomous handled");
+  Brain.Screen.newLine();
 }
 
 void usercontrol(void) {
+  printLine();
+  Brain.Screen.print("drivercontrol launched");
+  Brain.Screen.newLine();
+
+  Otto.setStopping(hold);
+
   while (1) {
     if (!Controller1.ButtonDown.pressing() && Controller1.ButtonUp.pressing()) {
       ForkMove(50);
-    } else if (Controller1.ButtonDown.pressing() && !Controller1.ButtonUp.pressing()) {
+    } else if (Controller1.ButtonDown.pressing() &&
+               !Controller1.ButtonUp.pressing()) {
       ForkMove(-50);
     } else {
       ForkMove(0);
     }
-  
+    if (Controller1.ButtonL1.pressing()) {
+      topLift(100);
+    }
+    if (Controller1.ButtonR1.pressing()) {
+      bottomLift(50);
+    }
+    if (Controller1.ButtonL2.pressing()) {
+      topLift(0);
+    }
+    if (Controller1.ButtonR2.pressing()) {
+      bottomLift(0);
+    }
     RightMove(Controller1.Axis2.position());
     LeftMove(Controller1.Axis3.position());
     wait(20, msec);
